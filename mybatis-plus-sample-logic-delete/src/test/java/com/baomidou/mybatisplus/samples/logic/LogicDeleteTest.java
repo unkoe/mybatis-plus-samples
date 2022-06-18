@@ -32,6 +32,16 @@ public class LogicDeleteTest {
     private Null2Mapper null2Mapper;
 
     @Test
+    public void testCustomXmlTableLogic() {
+        for (int i = 0; i < 20; i++) {
+            Common common = new Common().setName("" + i);
+            commonMapper.insert(common);
+        }
+        // 删除所有数据
+        commonMapper.customXmlTableLogic();
+    }
+
+    @Test
     public void tCommon() {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
