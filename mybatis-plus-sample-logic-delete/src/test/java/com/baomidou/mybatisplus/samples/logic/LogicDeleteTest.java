@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.samples.logic.mapper.Null1Mapper;
 import com.baomidou.mybatisplus.samples.logic.mapper.Null2Mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Maps;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -31,14 +32,19 @@ public class LogicDeleteTest {
     @Resource
     private Null2Mapper null2Mapper;
 
+
     @Test
     public void testCustomXmlTableLogic() {
         for (int i = 0; i < 20; i++) {
             Common common = new Common().setName("" + i);
             commonMapper.insert(common);
         }
-        // 删除所有数据
-        commonMapper.customXmlTableLogic();
+        final int delete = commonMapper.delete(Wrappers.<Common>lambdaQuery().ne(Common::getName, 21));
+        Assertions.assertTrue(delete > 0, "删除失败");
+        log.info("删除 {} 条", delete);
+        // 使用XML自定义SQL，我们会发现，它不会被应用逻辑删除
+        final List<Common> commons = commonMapper.customXmlTableLogic();
+        Assertions.assertTrue(commons.size() != 0, "查询结果不为空");
     }
 
     @Test
